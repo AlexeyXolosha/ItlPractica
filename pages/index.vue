@@ -10,6 +10,7 @@ import BrandList from "../components/BrandList.vue";
 import BannersWide from "~/components/Banners/BannersWide.vue";
 import BlogList from "../components/BlogList.vue";
 import SaleList from "../components/SaleList.vue";
+import SkeletonList from "~/components/SkeletonList.vue";
 
 const slider = ref([]);
 const advantages = ref([]);
@@ -25,23 +26,30 @@ const bannersWide = ref([]);
 const blog = ref([]);
 const brands = ref([]);
 
+const loading = ref({
+  hit: true,
+  stock: true,
+  recommend: true,
+  main: true,
+});
+
 const { $apiClient } = useNuxtApp();
 
-async function fetchDataMain(url, massive) {
+async function fetchDataMain(url, massive, key) {
   try {
     const { data } = await $apiClient.get(url);
     massive.value = data.data;
-    // console.log(massive.value);
   } catch (error) {
     console.error("Error:", error);
+  } finally {
+    loading.value[key] = false;
   }
 }
 
-async function fetchHitProduct(url, massive, submassive, filters) {
+async function fetchHitProduct(url, massive, submassive, filters, key) {
   try {
     const { data } = await $apiClient.get(url);
     massive.value = data.data;
-    // console.log(massive.value);
     const allProducts = [];
 
     async function fetchProducts() {
@@ -56,11 +64,14 @@ async function fetchHitProduct(url, massive, submassive, filters) {
         submassive.value = allProducts;
       } catch (error) {
         console.error("Error:", error);
+      } finally {
+        loading.value[key] = false;
       }
     }
     await fetchProducts();
   } catch (error) {
     console.error("Error:", error);
+    loading.value[key] = false;
   }
 }
 
@@ -72,6 +83,8 @@ async function fetchPopCategoriesMain() {
     popularCategoriesMain.value = data.data.slice(0, 8);
   } catch (error) {
     console.error("Error:", error);
+  } finally {
+    loading.value.main = false;
   }
 }
 
@@ -106,13 +119,18 @@ async function fetchBlog() {
 
 async function selectedCategoryHit(category) {
   if (category === "null") {
-    fetchHitProduct("/include/mainpage/hit/hit/", categoryListHit, hit);
+    fetchHitProduct(
+      "/include/mainpage/hit/hit/",
+      categoryListHit,
+      hit,
+      null,
+      "hit"
+    );
     return;
   }
   try {
     const { data } = await $apiClient.get(category);
     hit.value = data.data;
-    console.log(hit.value);
   } catch (error) {
     console.error("Error:", error);
   }
@@ -123,14 +141,15 @@ async function selectedCategoryStock(category) {
     fetchHitProduct(
       "/include/mainpage/hit/stock/",
       categoryListStock,
-      hitStock
+      hitStock,
+      null,
+      "stock"
     );
     return;
   }
   try {
     const { data } = await $apiClient.get(category);
     hitStock.value = data.data;
-    console.log(hitStock.value);
   } catch (error) {
     console.error("Error:", error);
   }
@@ -141,14 +160,15 @@ async function selectedCategoryRecommend(category) {
     fetchHitProduct(
       "/include/mainpage/hit/recommend/",
       categoryListRecommend,
-      hitRecommend
+      hitRecommend,
+      null,
+      "recommend"
     );
     return;
   }
   try {
     const { data } = await $apiClient.get(category);
     hitRecommend.value = data.data;
-    console.log(hitRecommend.value);
   } catch (error) {
     console.error("Error:", error);
   }
@@ -165,17 +185,31 @@ const mainPageBrands = computed(() =>
 
 onMounted(() => {
   fetchPopCategoriesMain();
-  fetchHitProduct("/include/mainpage/hit/hit/", categoryListHit, hit);
-  fetchHitProduct("/include/mainpage/hit/stock/", categoryListStock, hitStock);
+  fetchHitProduct(
+    "/include/mainpage/hit/hit/",
+    categoryListHit,
+    hit,
+    null,
+    "hit"
+  );
+  fetchHitProduct(
+    "/include/mainpage/hit/stock/",
+    categoryListStock,
+    hitStock,
+    null,
+    "stock"
+  );
   fetchHitProduct(
     "/include/mainpage/hit/recommend/",
     categoryListRecommend,
-    hitRecommend
+    hitRecommend,
+    null,
+    "recommend"
   );
-  fetchDataMain("/include/mainpage/sale/", sale);
-  fetchDataMain("/include/banners/slider/", slider);
-  fetchDataMain("/include/mainpage/advantages/", advantages);
-  fetchDataMain("/include/mainpage/brands/", brands);
+  fetchDataMain("/include/mainpage/sale/", sale, "main");
+  fetchDataMain("/include/banners/slider/", slider, "main");
+  fetchDataMain("/include/mainpage/advantages/", advantages, "main");
+  fetchDataMain("/include/mainpage/brands/", brands, "main");
   fetchBannersWide();
   fetchBlog();
 });
@@ -195,7 +229,12 @@ onMounted(() => {
         :categoryListHit="categoryListHit"
         @update-category="selectedCategoryHit"
       ></tabs-list>
-      <hit-list :products="hit" />
+      <template v-if="loading.hit">
+        <skeleton-list />
+      </template>
+      <template v-else>
+        <hit-list :products="hit" />
+      </template>
     </div>
     <div class="mb-16">
       <h1 class="text-2xl mb-5">Популярные категории</h1>
@@ -213,7 +252,12 @@ onMounted(() => {
         :categoryListHit="categoryListStock"
         @update-category="selectedCategoryStock"
       ></tabs-list>
-      <hit-list :products="hitStock"></hit-list>
+      <template v-if="loading.stock">
+        <skeleton-list />
+      </template>
+      <template v-else>
+        <hit-list :products="hitStock"></hit-list>
+      </template>
     </div>
     <div class="mb-16">
       <banners-wide :bannersWide="bannersWide" />
@@ -228,7 +272,12 @@ onMounted(() => {
         :categoryListHit="categoryListRecommend"
         @update-category="selectedCategoryRecommend"
       ></tabs-list>
-      <hit-list :products="hitRecommend"></hit-list>
+      <template v-if="loading.recommend">
+        <skeleton-list />
+      </template>
+      <template v-else>
+        <hit-list :products="hitRecommend"></hit-list>
+      </template>
     </div>
     <div>
       <h1 class="text-2xl mb-5">Блог</h1>

@@ -36,6 +36,7 @@ const fetchCategoryData = async (slug) => {
       `/catalog/${slug}/?include=items,filter,reviews-statistics,sections`
     );
     const { data } = response;
+    console.log("Ответ сервера:", response);
     return data.data;
   } catch (error) {
     console.error("Ошибка при получении данных категории:", error);
@@ -65,10 +66,13 @@ onMounted(async () => {
   await catalogStore.fetchCatalog();
   const categorySlug = route.params.category;
   category.value = await fetchCategoryData(categorySlug);
+  // console.log(category.value);
   if (category.value) {
     const itemsUrl = category.value.relationships?.items?.links?.self;
+    //console.log(itemsUrl);
     if (itemsUrl) {
       items.value = await fetchItemsData(itemsUrl);
+      //console.log(items.value);
     }
     childrenCategories.value = findChildrenCategories(category.value.id);
   }
