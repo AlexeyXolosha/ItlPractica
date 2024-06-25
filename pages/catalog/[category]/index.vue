@@ -36,26 +36,11 @@ const fetchCategoryData = async (slug) => {
       `/catalog/${slug}/?include=items,filter,reviews-statistics,sections`
     );
     const { data } = response;
-    processFilters(data);
     return data.data;
   } catch (error) {
     console.error("Ошибка при получении данных категории:", error);
     errorMessage.value = "Не удалось получить данные категории.";
     return null;
-  }
-};
-
-const processFilters = (data) => {
-  const filtersData =
-    data.included && data.included.filter
-      ? data.included.filter.attributes
-      : null;
-
-  if (filtersData) {
-    filters.value = filtersData;
-    //console.log("Данные фильтров:", filtersData);
-  } else {
-    console.error("Данные фильтров отсутствуют");
   }
 };
 
@@ -80,10 +65,8 @@ onMounted(async () => {
   await catalogStore.fetchCatalog();
   const categorySlug = route.params.category;
   category.value = await fetchCategoryData(categorySlug);
-  console.log(category.value);
   if (category.value) {
     const itemsUrl = category.value.relationships?.items?.links?.self;
-
     if (itemsUrl) {
       items.value = await fetchItemsData(itemsUrl);
     }
@@ -132,11 +115,7 @@ watch(
     </div>
 
     <div class="flex gap-7 w-full">
-      <FilterCatalog
-        v-if="filters.prices && filters.properties"
-        :filters="filters"
-      />
-      <p v-else>Loading filters...</p>
+      <FilterCatalog />
 
       <catalog-list-item :items="items" v-if="!isLoading && items.length" />
       <p v-if="!isLoading && !items.length">No items found.</p>

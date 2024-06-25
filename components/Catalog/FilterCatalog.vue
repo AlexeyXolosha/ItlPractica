@@ -1,35 +1,14 @@
 <script setup>
-import { watch } from "vue";
-
 import ButtonFilter from "../UI/ButtonFilter.vue";
 import InputSelectorFilter from "../UI/InputSelectorFilter.vue";
-
-const props = defineProps({
-  filters: {
-    type: Object,
-    required: true,
-    default: () => ({}),
-  },
-});
-
-watch(
-  props.filters,
-  (newFilters) => {
-    //  console.log("Updated filters in FilterCatalog:", newFilters);
-  },
-  { immediate: true }
-);
 </script>
 
 <template>
   <aside class="flex flex-col w-64 p-3">
     <div class="mb-7 flex flex-col gap-2">
       <h1 class="mb-5">Популярные подборки</h1>
-      <div
-        v-for="(top_item, index) in props.filters.properties[0].values"
-        :key="index"
-      >
-        <ButtonFilter>{{ top_item.name }} </ButtonFilter>
+      <div>
+        <ButtonFilter></ButtonFilter>
       </div>
     </div>
 
@@ -37,14 +16,7 @@ watch(
     <div class="mb-7">
       <h1 class="mb-5">Цена</h1>
       <div>
-        <input
-          id="priceRange"
-          type="range"
-          class="w-full mb-2"
-          :min="props.filters.prices[0].values.min"
-          :max="props.filters.prices[0].values.max"
-          oninput="updatePriceDisplay(this.value)"
-        />
+        <input id="priceRange" type="range" class="w-full mb-2" />
         <div class="flex justify-between">
           <span id="minPrice">0</span>
           <span id="maxPrice">140 900</span>
@@ -55,7 +27,7 @@ watch(
     <!--SideBar Свойства-->
     <div>
       <div class="flex items-center relative">
-        <h1 class="mb-5">{{ props.filters.properties[1].name }}</h1>
+        <h1 class="mb-5"></h1>
         <svg
           class="absolute top-3 right-0 cursor-pointer"
           width="14"
@@ -70,11 +42,8 @@ watch(
           />
         </svg>
       </div>
-      <div
-        v-for="(brand, index) in props.filters.properties[1].values"
-        :key="index"
-      >
-        <InputSelectorFilter>{{ brand.name }}</InputSelectorFilter>
+      <div>
+        <InputSelectorFilter></InputSelectorFilter>
       </div>
     </div>
     <!--<button class="border border-blue-100 w-64 h-9">Сбросить фильтр</button>-->

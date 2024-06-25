@@ -21,44 +21,31 @@ const categoryListStock = ref([]);
 const categoryListRecommend = ref([]);
 const popularCategoriesMain = ref([]);
 const sale = ref([]);
-const banners = ref([]);
 const bannersWide = ref([]);
 const blog = ref([]);
 const brands = ref([]);
-const items = ref([]);
 
 const { $apiClient } = useNuxtApp();
-
-async function fetchItems() {
-  try {
-    const { data } = await $apiClient.get(
-      "/catalog/elektronika/?include=items,filter,reviews-statistics,sections"
-    );
-    items.value = data.data;
-    //console.log(items.value);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
 
 async function fetchDataMain(url, massive) {
   try {
     const { data } = await $apiClient.get(url);
     massive.value = data.data;
-    console.log(massive.value);
+    // console.log(massive.value);
   } catch (error) {
     console.error("Error:", error);
   }
 }
 
-async function fetchHit() {
+async function fetchHitProduct(url, massive, submassive, filters) {
   try {
-    const { data } = await $apiClient.get("/include/mainpage/hit/hit/");
-    categoryListHit.value = data.data;
+    const { data } = await $apiClient.get(url);
+    massive.value = data.data;
+    // console.log(massive.value);
     const allProducts = [];
 
     async function fetchProducts() {
-      const requests = categoryListHit.value.map((category) =>
+      const requests = massive.value.map((category) =>
         $apiClient.get(category.links.self)
       );
       try {
@@ -66,92 +53,12 @@ async function fetchHit() {
         responses.forEach((response) => {
           allProducts.push(...response.data.data);
         });
-        hit.value = allProducts;
+        submassive.value = allProducts;
       } catch (error) {
         console.error("Error:", error);
       }
     }
     await fetchProducts();
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-async function fetchBannersSlider() {
-  try {
-    const { data } = await $apiClient.get("/include/banners/slider/");
-    slider.value = data.data;
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-async function fetchAdvantages() {
-  try {
-    const { data } = await $apiClient.get("/include/mainpage/advantages/");
-    advantages.value = data.data;
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-async function fetchHitStock() {
-  try {
-    const { data } = await $apiClient.get("/include/mainpage/hit/stock/");
-    categoryListStock.value = data.data;
-
-    const allProducts = [];
-
-    async function fetchProducts() {
-      const requests = categoryListStock.value.map((category) =>
-        $apiClient.get(category.links.self)
-      );
-      try {
-        const responses = await Promise.all(requests);
-        responses.forEach((response) => {
-          allProducts.push(...response.data.data);
-        });
-        hitStock.value = allProducts;
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }
-    await fetchProducts();
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-async function fetchHitRecommend() {
-  try {
-    const { data } = await $apiClient.get("/include/mainpage/hit/recommend/");
-    categoryListRecommend.value = data.data;
-    const allProducts = [];
-
-    async function fetchProducts() {
-      const requests = categoryListRecommend.value.map((category) =>
-        $apiClient.get(category.links.self)
-      );
-      try {
-        const responses = await Promise.all(requests);
-        responses.forEach((response) => {
-          allProducts.push(...response.data.data);
-        });
-        hitRecommend.value = allProducts;
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }
-    await fetchProducts();
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-async function fetchBanners() {
-  try {
-    const { data } = await $apiClient.get("/include/banners/banner-with-text/");
-    banners.value = data.data;
   } catch (error) {
     console.error("Error:", error);
   }
@@ -163,15 +70,6 @@ async function fetchPopCategoriesMain() {
       "/include/mainpage/popular-category/"
     );
     popularCategoriesMain.value = data.data.slice(0, 8);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-async function fetchBrands() {
-  try {
-    const { data } = await $apiClient.get("/include/mainpage/brands/");
-    brands.value = data.data;
   } catch (error) {
     console.error("Error:", error);
   }
@@ -206,6 +104,56 @@ async function fetchBlog() {
   }
 }
 
+async function selectedCategoryHit(category) {
+  if (category === "null") {
+    fetchHitProduct("/include/mainpage/hit/hit/", categoryListHit, hit);
+    return;
+  }
+  try {
+    const { data } = await $apiClient.get(category);
+    hit.value = data.data;
+    console.log(hit.value);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+async function selectedCategoryStock(category) {
+  if (category === "null") {
+    fetchHitProduct(
+      "/include/mainpage/hit/stock/",
+      categoryListStock,
+      hitStock
+    );
+    return;
+  }
+  try {
+    const { data } = await $apiClient.get(category);
+    hitStock.value = data.data;
+    console.log(hitStock.value);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+async function selectedCategoryRecommend(category) {
+  if (category === "null") {
+    fetchHitProduct(
+      "/include/mainpage/hit/recommend/",
+      categoryListRecommend,
+      hitRecommend
+    );
+    return;
+  }
+  try {
+    const { data } = await $apiClient.get(category);
+    hitRecommend.value = data.data;
+    console.log(hitRecommend.value);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
 const mainPageBrands = computed(() =>
   brands.value.slice(0, 8).map((brand) => ({
     id: brand.id,
@@ -216,20 +164,23 @@ const mainPageBrands = computed(() =>
 );
 
 onMounted(() => {
-  fetchDataMain("/include/mainpage/sale/", sale);
-  fetchItems();
-  fetchBannersSlider();
-  fetchAdvantages();
-  fetchHit();
-  fetchHitStock();
-  fetchHitRecommend();
-  fetchBanners();
   fetchPopCategoriesMain();
-  fetchBrands();
+  fetchHitProduct("/include/mainpage/hit/hit/", categoryListHit, hit);
+  fetchHitProduct("/include/mainpage/hit/stock/", categoryListStock, hitStock);
+  fetchHitProduct(
+    "/include/mainpage/hit/recommend/",
+    categoryListRecommend,
+    hitRecommend
+  );
+  fetchDataMain("/include/mainpage/sale/", sale);
+  fetchDataMain("/include/banners/slider/", slider);
+  fetchDataMain("/include/mainpage/advantages/", advantages);
+  fetchDataMain("/include/mainpage/brands/", brands);
   fetchBannersWide();
   fetchBlog();
 });
 </script>
+
 <template>
   <div class="mb-16 py-9 bg-blue-50 w-full">
     <div class="wrapper">
@@ -240,7 +191,10 @@ onMounted(() => {
   <div class="wrapper">
     <div class="mb-16">
       <h1 class="text-2xl mb-5">Хиты продаж</h1>
-      <tabs-list :categoryListHit="categoryListHit"></tabs-list>
+      <tabs-list
+        :categoryListHit="categoryListHit"
+        @update-category="selectedCategoryHit"
+      ></tabs-list>
       <hit-list :products="hit" />
     </div>
     <div class="mb-16">
@@ -255,7 +209,10 @@ onMounted(() => {
     </div>
     <div class="mb-16">
       <h1 class="text-2xl mb-5">Распродажа</h1>
-      <tabs-list :categoryListHit="categoryListStock"></tabs-list>
+      <tabs-list
+        :categoryListHit="categoryListStock"
+        @update-category="selectedCategoryStock"
+      ></tabs-list>
       <hit-list :products="hitStock"></hit-list>
     </div>
     <div class="mb-16">
@@ -267,7 +224,10 @@ onMounted(() => {
     </div>
     <div class="mb-16">
       <h1 class="text-2xl mb-5">Рекомендуем</h1>
-      <tabs-list :categoryListHit="categoryListRecommend"></tabs-list>
+      <tabs-list
+        :categoryListHit="categoryListRecommend"
+        @update-category="selectedCategoryRecommend"
+      ></tabs-list>
       <hit-list :products="hitRecommend"></hit-list>
     </div>
     <div>

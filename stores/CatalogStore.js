@@ -6,7 +6,6 @@ export const useCatalogStore = defineStore("catalog", () => {
   const catalogTree = ref([]);
   const catalogList = ref([]);
   const catalog = ref([]);
-  const filters = ref({});
 
   function buildTree(items) {
     let tree = [];
@@ -43,22 +42,9 @@ export const useCatalogStore = defineStore("catalog", () => {
         parentId: item.attributes.parentId || null,
       }));
       catalogTree.value = buildTree(data.data);
-      catalog.value = catalogList.value; // Обновим каталог
+      catalog.value = catalogList.value;
     } catch (error) {
       console.error("Error fetching catalog:", error);
-    }
-  }
-
-  async function fetchFilters(slug) {
-    const { $apiClient } = useNuxtApp();
-    try {
-      const response = await $apiClient.get(`/catalog/${slug}/filters`);
-      if (response.data && response.data.attributes) {
-        filters.value = response.data.attributes;
-        console.log("Filters fetched:", filters.value);
-      }
-    } catch (error) {
-      console.error("Error fetching filters:", error);
     }
   }
 
@@ -66,8 +52,6 @@ export const useCatalogStore = defineStore("catalog", () => {
     catalogTree,
     catalogList,
     catalog,
-    filters,
     fetchCatalog,
-    fetchFilters,
   };
 });

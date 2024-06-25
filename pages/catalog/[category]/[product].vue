@@ -78,7 +78,7 @@ onMounted(fetchProductCatalog);
         <p class="text-slate-400">
           Код товара:
           <span class="text-black">{{
-            product?.attributes.properties.cml2Article.value
+            product?.attributes?.properties?.cml2Article?.value
           }}</span>
         </p>
       </div>

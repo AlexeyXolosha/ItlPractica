@@ -12,7 +12,7 @@ const fullImageUrl = computed(() => `${baseURL}${props.image}`);
 </script>
 
 <template>
-  <nuxt-link :to="links">
+  <nuxt-link>
     <div class="relative mb-6">
       <img :src="fullImageUrl" alt="" class="rounded" />
       <div class="flex items-center gap-5 absolute top-48 px-3">
