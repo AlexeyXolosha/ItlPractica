@@ -9,7 +9,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="flex justify-between gap-4">
+  <div class="flex gap-4 justify-between">
     <blog-item
       v-for="post in blog"
       :key="post.id"

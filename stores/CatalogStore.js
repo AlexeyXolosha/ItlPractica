@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useNuxtApp } from "#app";
 
 export const useCatalogStore = defineStore("catalog", () => {
   const catalogTree = ref([]);

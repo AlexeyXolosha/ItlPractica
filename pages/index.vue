@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useNuxtApp } from "#app";
+import { useBlogStore } from "~/stores/blog";
+
 import Advantage from "~/components/Advantage.vue";
 import HitList from "../components/HitList.vue";
 import TabsList from "../components/TabsList.vue";
@@ -11,6 +13,9 @@ import BannersWide from "~/components/Banners/BannersWide.vue";
 import BlogList from "../components/BlogList.vue";
 import SaleList from "../components/SaleList.vue";
 import SkeletonList from "~/components/SkeletonList.vue";
+import SkeletonCategoryList from "~/components/SkeletonCategoryList.vue"; // Import SkeletonCategoryList
+
+const blogStore = useBlogStore();
 
 const slider = ref([]);
 const advantages = ref([]);
@@ -23,8 +28,8 @@ const categoryListRecommend = ref([]);
 const popularCategoriesMain = ref([]);
 const sale = ref([]);
 const bannersWide = ref([]);
-const blog = ref([]);
 const brands = ref([]);
+const blog = ref([]);
 
 const loading = ref({
   hit: true,
@@ -39,6 +44,7 @@ async function fetchDataMain(url, massive, key) {
   try {
     const { data } = await $apiClient.get(url);
     massive.value = data.data;
+    console.log(massive.value);
   } catch (error) {
     console.error("Error:", error);
   } finally {
@@ -62,6 +68,8 @@ async function fetchHitProduct(url, massive, submassive, filters, key) {
           allProducts.push(...response.data.data);
         });
         submassive.value = allProducts;
+
+        //console.log(submassive.value);
       } catch (error) {
         console.error("Error:", error);
       } finally {
@@ -95,22 +103,6 @@ async function fetchBannersWide() {
       id: bannerwide.id,
       name: bannerwide.attributes.name,
       image: bannerwide.attributes.images.preview,
-    }));
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-async function fetchBlog() {
-  try {
-    const { data } = await $apiClient.get("/include/mainpage/blog/");
-    blog.value = data.data.map((blog) => ({
-      id: blog.id,
-      date_active_to: blog.attributes.date_active_to,
-      detail_page: blog.attributes.detail_page,
-      image: blog.attributes.image,
-      section_name: blog.attributes.section_name,
-      title: blog.attributes.title,
     }));
   } catch (error) {
     console.error("Error:", error);
@@ -211,7 +203,7 @@ onMounted(() => {
   fetchDataMain("/include/mainpage/advantages/", advantages, "main");
   fetchDataMain("/include/mainpage/brands/", brands, "main");
   fetchBannersWide();
-  fetchBlog();
+  blogStore.fetchBlog();
 });
 </script>
 
@@ -229,22 +221,30 @@ onMounted(() => {
         :categoryListHit="categoryListHit"
         @update-category="selectedCategoryHit"
       ></tabs-list>
-      <template v-if="loading.hit">
+      <div v-if="loading.hit">
         <skeleton-list />
-      </template>
-      <template v-else>
+      </div>
+      <div v-else>
         <hit-list :products="hit" />
-      </template>
+      </div>
     </div>
     <div class="mb-16">
       <h1 class="text-2xl mb-5">Популярные категории</h1>
-      <category-list
-        :popularCategoriesMain="popularCategoriesMain"
-      ></category-list>
+      <div v-if="loading.main">
+        <skeleton-category-list />
+      </div>
+      <div v-else>
+        <category-list :popularCategoriesMain="popularCategoriesMain" />
+      </div>
     </div>
     <div class="mb-16">
       <h1 class="text-2xl mb-5">Популярные бренды</h1>
-      <brand-list :brands="mainPageBrands"></brand-list>
+      <div v-if="loading.main">
+        <skeleton-category-list />
+      </div>
+      <div v-else>
+        <brand-list :brands="mainPageBrands"></brand-list>
+      </div>
     </div>
     <div class="mb-16">
       <h1 class="text-2xl mb-5">Распродажа</h1>
@@ -252,12 +252,12 @@ onMounted(() => {
         :categoryListHit="categoryListStock"
         @update-category="selectedCategoryStock"
       ></tabs-list>
-      <template v-if="loading.stock">
+      <div v-if="loading.stock">
         <skeleton-list />
-      </template>
-      <template v-else>
+      </div>
+      <div v-else>
         <hit-list :products="hitStock"></hit-list>
-      </template>
+      </div>
     </div>
     <div class="mb-16">
       <banners-wide :bannersWide="bannersWide" />
@@ -272,16 +272,16 @@ onMounted(() => {
         :categoryListHit="categoryListRecommend"
         @update-category="selectedCategoryRecommend"
       ></tabs-list>
-      <template v-if="loading.recommend">
+      <div v-if="loading.recommend">
         <skeleton-list />
-      </template>
-      <template v-else>
+      </div>
+      <div v-else>
         <hit-list :products="hitRecommend"></hit-list>
-      </template>
+      </div>
     </div>
     <div>
       <h1 class="text-2xl mb-5">Блог</h1>
-      <blog-list :blog="blog" />
+      <blog-list :blog="blogStore.blog" />
     </div>
   </div>
 </template>

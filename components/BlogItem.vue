@@ -14,13 +14,13 @@ const fullImageUrl = computed(() => `${baseURL}${props.image}`);
 </script>
 
 <template>
-  <div>
-    <img :src="fullImageUrl" alt="" class="rounded" />
+  <div class="w-full">
+    <div class="mb-4">
+      <img :src="fullImageUrl" alt="" class="rounded" />
+    </div>
     <div>
-      <h1 class="text-lg mb-3">{{ title }}</h1>
-      <div>
-        <p class="text-sm text-slate-400">{{ section_name }}</p>
-      </div>
+      <p class="text-black">{{ title }}</p>
+      <p class="text-slate-400">{{ section_name }}</p>
     </div>
   </div>
 </template>

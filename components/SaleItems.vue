@@ -15,7 +15,7 @@ const fullImageUrl = computed(() => `${baseURL}${props.image}`);
   <nuxt-link>
     <div class="relative mb-6">
       <img :src="fullImageUrl" alt="" class="rounded" />
-      <div class="flex items-center gap-5 absolute top-48 px-3">
+      <div class="flex items-center gap-5 absolute top-0 px-3">
         <div v-if="discount" class="bg-yellow-400 px-2 py-1 rounded">
           <span class="text-sm">{{ discount }}</span>
         </div>

@@ -32,6 +32,7 @@ const props = defineProps({
         :name="product.attributes.name"
         :count-shop="product.attributes.product.stores.count.title"
         :value-formatted="product.attributes.product.price.valueFormatted"
+        :basePrice="product.attributes.product.basePrice?.valueFormatted"
         :stikers="product.attributes.stikers"
         :links="product.links.self"
       />

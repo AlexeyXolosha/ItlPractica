@@ -4,9 +4,6 @@ import CatalogCard from "~/components/Catalog/CatalogCard.vue";
 import { useCatalogStore } from "~/stores/CatalogStore";
 
 const catalogStore = useCatalogStore();
-const catalog = catalogStore.catalog;
-console.log(catalog);
-
 defineEmits(["closeModal"]);
 
 onMounted(() => {

@@ -4,7 +4,6 @@ import { useRoute } from "vue-router";
 import { useNuxtApp } from "#app";
 import { useCatalogStore } from "~/stores/CatalogStore";
 import BannersSlideCatalog from "~/components/Banners/BannersCatalog.vue";
-import Pagination from "~/components/Pagination.vue";
 import CatalogCard from "~/components/Catalog/CatalogCard.vue";
 import FilterCatalog from "~/components/Catalog/FilterCatalog.vue";
 import CatalogListItem from "~/components/Catalog/CatalogListItem.vue";
@@ -37,6 +36,12 @@ const fetchCategoryData = async (slug) => {
     );
     const { data } = response;
     console.log("Ответ сервера:", response);
+
+    if (data.included && data.included.filter) {
+      filters.value = data.included.filter;
+      console.log("Фильтры:", filters.value);
+    }
+
     return data.data;
   } catch (error) {
     console.error("Ошибка при получении данных категории:", error);
@@ -119,15 +124,15 @@ watch(
     </div>
 
     <div class="flex gap-7 w-full">
-      <FilterCatalog />
-
-      <catalog-list-item :items="items" v-if="!isLoading && items.length" />
-      <p v-if="!isLoading && !items.length">No items found.</p>
-      <p v-if="isLoading">Loading...</p>
-      <p v-if="errorMessage">{{ errorMessage }}</p>
-    </div>
-    <div class="flex justify-end mb-12">
-      <pagination />
+      <div>
+        <FilterCatalog :filters="filters" />
+      </div>
+      <div>
+        <catalog-list-item :items="items" v-if="!isLoading && items.length" />
+        <p v-if="!isLoading && !items.length">No items found.</p>
+        <p v-if="isLoading">Loading...</p>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
+      </div>
     </div>
   </div>
 </template>
