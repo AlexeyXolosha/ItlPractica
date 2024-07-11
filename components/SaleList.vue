@@ -10,7 +10,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="flex gap-8">
+  <div class="flex justify-between">
     <sale-items
       v-for="sale in sales.slice(0, 4)"
       :key="sale.id"

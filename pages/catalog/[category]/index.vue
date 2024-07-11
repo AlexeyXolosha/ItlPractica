@@ -35,7 +35,7 @@ const fetchCategoryData = async (slug) => {
       `/catalog/${slug}/?include=items,filter,reviews-statistics,sections`
     );
     const { data } = response;
-    console.log("Ответ сервера:", response);
+    //  console.log("Ответ сервера:", response);
 
     if (data.included && data.included.filter) {
       filters.value = data.included.filter;
@@ -88,15 +88,7 @@ onMounted(() => {
   fetchBannersCatalog();
 });
 
-watch(
-  () => catalogStore.catalogList,
-  (newCatalogList) => {
-    if (category.value) {
-      childrenCategories.value = findChildrenCategories(category.value.id);
-    }
-  },
-  { immediate: true }
-);
+
 </script>
 
 <template>

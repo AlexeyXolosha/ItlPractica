@@ -14,8 +14,8 @@ export const useFooterStore = defineStore("footer", {
       const { $apiClient } = useNuxtApp();
       try {
         const { data } = await $apiClient.get(url);
-        this[key] = data;
-        console.log(this[key]);
+        this[key] = data.data;
+        //   console.log(this[key]);
       } catch (error) {
         console.error("Error:", error);
       }

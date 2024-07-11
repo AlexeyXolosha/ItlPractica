@@ -15,7 +15,7 @@ const getImageUrl = (imagePath) => `${baseURL}${imagePath}`;
     :modules="[SwiperAutoplay, SwiperEffectFade, SwiperPagination]"
     :slides-per-view="1"
     :effect="'fade'"
-    :loop="true"
+    :loop="bannerSlide.length > 1"
     :autoplay="{
       delay: 3000,
       disableOnInteraction: true,

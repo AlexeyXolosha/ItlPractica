@@ -14,7 +14,6 @@ const props = defineProps({
 <template>
   <swiper
     :modules="[SwiperNavigation, SwiperAutoplay]"
-    :slides-per-view="6"
     :space-between="90"
     :loop="true"
     :navigation="true"

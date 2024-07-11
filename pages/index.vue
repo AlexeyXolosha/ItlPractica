@@ -13,7 +13,7 @@ import BannersWide from "~/components/Banners/BannersWide.vue";
 import BlogList from "../components/BlogList.vue";
 import SaleList from "../components/SaleList.vue";
 import SkeletonList from "~/components/SkeletonList.vue";
-import SkeletonCategoryList from "~/components/SkeletonCategoryList.vue"; // Import SkeletonCategoryList
+import SkeletonCategoryList from "~/components/SkeletonCategoryList.vue";
 
 const blogStore = useBlogStore();
 
@@ -29,7 +29,6 @@ const popularCategoriesMain = ref([]);
 const sale = ref([]);
 const bannersWide = ref([]);
 const brands = ref([]);
-const blog = ref([]);
 
 const loading = ref({
   hit: true,
@@ -44,7 +43,7 @@ async function fetchDataMain(url, massive, key) {
   try {
     const { data } = await $apiClient.get(url);
     massive.value = data.data;
-    console.log(massive.value);
+    //   console.log(massive.value);
   } catch (error) {
     console.error("Error:", error);
   } finally {
@@ -104,6 +103,7 @@ async function fetchBannersWide() {
       name: bannerwide.attributes.name,
       image: bannerwide.attributes.images.preview,
     }));
+    //console.log(bannersWide.value);
   } catch (error) {
     console.error("Error:", error);
   }

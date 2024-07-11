@@ -46,7 +46,9 @@ provide("CategoryModal", {
     @open-modal="openModal"
   />
   <CatalogModal v-if="modalCategoryOpen" @close-modal="closeModal" />
+  <footer />
   <div>
     <slot></slot>
   </div>
+  <LayoutFooter />
 </template>

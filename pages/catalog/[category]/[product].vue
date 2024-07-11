@@ -27,7 +27,7 @@ async function fetchProductCatalog() {
       `/catalog/${categorySlug}/${productSlug}/`
     );
     product.value = data.data;
-    console.log("Данные о продукте:", product.value);
+    // console.log("Данные о продукте:", product.value);
   } catch (error) {
     console.error("Ошибка при загрузке данных о товаре:", error);
     if (error.response) {
@@ -42,7 +42,7 @@ async function fetchExpandables() {
       `/catalog/${categorySlug}/${productSlug}/relationships/expandables/`
     );
     expandables.value = data.data;
-    console.log("Данные о свойствах:", expandables.value);
+    // console.log("Данные о свойствах:", expandables.value);
   } catch (error) {
     console.error("Ошибка при загрузке отзывов:", error);
     if (error.response) {

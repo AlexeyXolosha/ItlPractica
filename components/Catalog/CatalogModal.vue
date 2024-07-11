@@ -43,7 +43,7 @@ onMounted(() => {
       </div>
       <div class="grid grid-cols-4 gap-4">
         <CatalogCard
-          v-for="item in catalogStore.catalog"
+          v-for="item in catalogStore.catalogTree"
           :key="item.id"
           :item="item"
           @click="$emit('closeModal')"

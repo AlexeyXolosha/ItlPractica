@@ -15,9 +15,9 @@ const props = defineProps({
 const minValue = ref(props.min);
 const maxValue = ref(props.max);
 
-watch([minValue, maxValue], ([newMin, newMax]) => {
-  console.log("Range changed:", newMin, newMax);
-});
+//watch([minValue, maxValue], ([newMin, newMax]) => {
+// console.log("Range changed:", newMin, newMax);
+//});
 </script>
 
 <template>
