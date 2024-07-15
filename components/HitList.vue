@@ -1,8 +1,6 @@
 <script setup>
-import CardItem from "./CardItem.vue";
 import "swiper/css";
 import "swiper/css/navigation";
-
 const props = defineProps({
   products: {
     type: Array,
@@ -13,18 +11,14 @@ const props = defineProps({
 
 <template>
   <swiper
-    :modules="[SwiperNavigation, SwiperAutoplay]"
-    :space-between="90"
-    :loop="true"
+    :slides-per-view="6"
+    :modules="[SwiperNavigation]"
     :navigation="true"
-    :simulate-touch="false"
-    :allow-touch-move="false"
+    :loop="false"
+    :space-between="24"
+    :watch-overflow="true"
   >
-    <swiper-slide
-      v-for="product in products"
-      :key="product.id"
-      style="width: 280px"
-    >
+    <swiper-slide v-for="product in products" :key="product.id">
       <card-item
         :key="product.id"
         :image="product.attributes.image"
@@ -39,39 +33,4 @@ const props = defineProps({
   </swiper>
 </template>
 
-<style scoped>
-.swiper-container {
-  position: relative;
-}
-
-.swiper-slide {
-  width: 280px !important;
-  margin-right: 20px !important;
-}
-
-.swiper-button-prev,
-.swiper-button-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  background: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-}
-
-.swiper-button-prev {
-  left: 0;
-}
-
-.swiper-button-next {
-  right: 0;
-}
-
-.swiper-button-prev::after,
-.swiper-button-next::after {
-  font-size: 30px;
-  color: rgb(37, 99, 235); /* Изменение цвета стрелки */
-}
-</style>
+<style scoped></style>

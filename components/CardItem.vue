@@ -43,11 +43,11 @@ const fullImageUrl = computed(() => `${baseURL}${props.image}`);
           alt=""
           class="mb-6 w-52 h-44 object-contain mx-auto"
         />
-        <div class="absolute top-0 left-0 flex flex-col gap-2 text-center">
+        <div class="absolute top-0 left-0 flex flex-col text-center gap-2">
           <div
             v-for="stiker in stikers"
             :key="stiker"
-            class="px-3 rounded"
+            class="px-3 inline-block rounded"
             :class="getStickerClass(stiker)"
           >
             <span class="text-white">{{ stiker }}</span>
@@ -66,7 +66,7 @@ const fullImageUrl = computed(() => `${baseURL}${props.image}`);
         <span v-if="basePrice" class="line-through text-slate-400 text-sm">{{
           basePrice
         }}</span>
-        <span v-if="valueFormatted">{{ valueFormatted }}</span>
+        <h3 class="text-2xl" v-if="valueFormatted">{{ valueFormatted }}</h3>
       </div>
       <!--Блок кнопок-->
       <div class="flex items-center gap-6">

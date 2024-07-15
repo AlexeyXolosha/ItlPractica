@@ -13,7 +13,7 @@ const fullImageUrl = computed(() => `${baseURL}${props.image}`);
 <template>
   <div class="w-48 mb-4">
     <div
-      class="bg-blue-50 container-category w-48 h-32 p-8 flex justify-center items-center mb-8 rounded"
+      class="bg-blue-50 container-category w-48 h-32 p-8 flex justify-center items-center mb-8 rounded-md"
     >
       <img :src="fullImageUrl" :alt="name" />
     </div>

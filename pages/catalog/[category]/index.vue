@@ -67,28 +67,22 @@ const findChildrenCategories = (parentId) => {
   );
 };
 
-onMounted(async () => {
-  await catalogStore.fetchCatalog();
-  const categorySlug = route.params.category;
-  category.value = await fetchCategoryData(categorySlug);
-  // console.log(category.value);
-  if (category.value) {
-    const itemsUrl = category.value.relationships?.items?.links?.self;
-    //console.log(itemsUrl);
-    if (itemsUrl) {
-      items.value = await fetchItemsData(itemsUrl);
-      //console.log(items.value);
-    }
-    childrenCategories.value = findChildrenCategories(category.value.id);
+await catalogStore.fetchCatalog();
+const categorySlug = route.params.category;
+category.value = await fetchCategoryData(categorySlug);
+// console.log(category.value);
+if (category.value) {
+  const itemsUrl = category.value.relationships?.items?.links?.self;
+  //console.log(itemsUrl);
+  if (itemsUrl) {
+    items.value = await fetchItemsData(itemsUrl);
+    //console.log(items.value);
   }
-  isLoading.value = false;
-});
+  childrenCategories.value = findChildrenCategories(category.value.id);
+}
+isLoading.value = false;
 
-onMounted(() => {
-  fetchBannersCatalog();
-});
-
-
+fetchBannersCatalog();
 </script>
 
 <template>
@@ -121,9 +115,6 @@ onMounted(() => {
       </div>
       <div>
         <catalog-list-item :items="items" v-if="!isLoading && items.length" />
-        <p v-if="!isLoading && !items.length">No items found.</p>
-        <p v-if="isLoading">Loading...</p>
-        <p v-if="errorMessage">{{ errorMessage }}</p>
       </div>
     </div>
   </div>

@@ -17,7 +17,7 @@ function updateCategory(category) {
 </script>
 
 <template>
-  <div class="flex items-center gap-7 mb-10">
+  <div class="flex items-center gap-3 mb-10">
     <tabs-button @click="updateCategory('null')">Все категории</tabs-button>
     <tabs-button
       v-for="category in categoryListHit"

@@ -7,7 +7,6 @@ import Advantage from "~/components/Advantage.vue";
 import HitList from "../components/HitList.vue";
 import TabsList from "../components/TabsList.vue";
 import CategoryList from "../components/CategoryList.vue";
-import BannersSlide from "~/components/Banners/BannersSlide.vue";
 import BrandList from "../components/BrandList.vue";
 import BannersWide from "~/components/Banners/BannersWide.vue";
 import BlogList from "../components/BlogList.vue";
@@ -175,36 +174,34 @@ const mainPageBrands = computed(() =>
   }))
 );
 
-onMounted(() => {
-  fetchPopCategoriesMain();
-  fetchHitProduct(
-    "/include/mainpage/hit/hit/",
-    categoryListHit,
-    hit,
-    null,
-    "hit"
-  );
-  fetchHitProduct(
-    "/include/mainpage/hit/stock/",
-    categoryListStock,
-    hitStock,
-    null,
-    "stock"
-  );
-  fetchHitProduct(
-    "/include/mainpage/hit/recommend/",
-    categoryListRecommend,
-    hitRecommend,
-    null,
-    "recommend"
-  );
-  fetchDataMain("/include/mainpage/sale/", sale, "main");
-  fetchDataMain("/include/banners/slider/", slider, "main");
-  fetchDataMain("/include/mainpage/advantages/", advantages, "main");
-  fetchDataMain("/include/mainpage/brands/", brands, "main");
-  fetchBannersWide();
-  blogStore.fetchBlog();
-});
+fetchPopCategoriesMain();
+fetchHitProduct(
+  "/include/mainpage/hit/hit/",
+  categoryListHit,
+  hit,
+  null,
+  "hit"
+);
+fetchHitProduct(
+  "/include/mainpage/hit/stock/",
+  categoryListStock,
+  hitStock,
+  null,
+  "stock"
+);
+fetchHitProduct(
+  "/include/mainpage/hit/recommend/",
+  categoryListRecommend,
+  hitRecommend,
+  null,
+  "recommend"
+);
+fetchDataMain("/include/mainpage/sale/", sale, "main");
+fetchDataMain("/include/banners/slider/", slider, "main");
+fetchDataMain("/include/mainpage/advantages/", advantages, "main");
+fetchDataMain("/include/mainpage/brands/", brands, "main");
+fetchBannersWide();
+blogStore.fetchBlog();
 </script>
 
 <template>
@@ -216,7 +213,7 @@ onMounted(() => {
   </div>
   <div class="wrapper">
     <div class="mb-16">
-      <h1 class="text-2xl mb-5">Хиты продаж</h1>
+      <h1 class="text-2xl mb-4">Хиты продаж</h1>
       <tabs-list
         :categoryListHit="categoryListHit"
         @update-category="selectedCategoryHit"
@@ -229,7 +226,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="mb-16">
-      <h1 class="text-2xl mb-5">Популярные категории</h1>
+      <h1 class="text-2xl mb-10">Популярные категории</h1>
       <div v-if="loading.main">
         <skeleton-category-list />
       </div>
@@ -238,7 +235,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="mb-16">
-      <h1 class="text-2xl mb-5">Популярные бренды</h1>
+      <h1 class="text-2xl mb-10">Популярные бренды</h1>
       <div v-if="loading.main">
         <skeleton-category-list />
       </div>
@@ -247,7 +244,7 @@ onMounted(() => {
       </div>
     </div>
     <div class="mb-16">
-      <h1 class="text-2xl mb-5">Распродажа</h1>
+      <h1 class="text-2xl mb-4">Распродажа</h1>
       <tabs-list
         :categoryListHit="categoryListStock"
         @update-category="selectedCategoryStock"
@@ -267,7 +264,7 @@ onMounted(() => {
       <sale-list :sales="sale"></sale-list>
     </div>
     <div class="mb-16">
-      <h1 class="text-2xl mb-5">Рекомендуем</h1>
+      <h1 class="text-2xl mb-4">Рекомендуем</h1>
       <tabs-list
         :categoryListHit="categoryListRecommend"
         @update-category="selectedCategoryRecommend"
@@ -280,7 +277,7 @@ onMounted(() => {
       </div>
     </div>
     <div>
-      <h1 class="text-2xl mb-5">Блог</h1>
+      <h1 class="text-2xl mb-10">Блог</h1>
       <blog-list :blog="blogStore.blog" />
     </div>
   </div>
